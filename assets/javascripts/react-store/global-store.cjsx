@@ -7,6 +7,7 @@ ITEM_CHANGE_EVENT = 'change:item'
 
 window.GlobalStore = _.assign(new EventEmitter(), {
   quickPollingEmbedEditor: {}
+  newObject: {}
   quickEmbedItems: []
 
   addUniqueItem: ->
