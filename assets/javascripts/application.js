@@ -1,3 +1,3 @@
 $(document).ready(function(){
-  ReactDOM.render(React.createElement(GradientDescent), $('#target-graph')[0]);
+  ReactDOM.render(React.createElement(GradientDescent, {scatters: scatters}), $('#target-graph')[0]);
 });
