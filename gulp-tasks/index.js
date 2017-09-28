@@ -16,6 +16,7 @@ var sources = {
       'node_modules/react-dom/dist/react-dom.js',
       'node_modules/react-bootstrap/dist/react-bootstrap.js',
       'node_modules/styled-components/dist/styled-components.js',
+      // 'node_modules/mathjs/dist/math.js',
       // 'assets/javascripts/flux/flux.js',
       'node_modules/flux/dist/Flux.js',
       'assets/javascripts/flux/init-dispatcher.js',

@@ -1,3 +1,5 @@
+# tugas machine learning email to yosi@stts.edu
+# [Tugas machine learning 1]
 { PropTypes } = React
 { Row, Col, FormGroup, Button, FormInput, FormControl } = ReactBootstrap
 
@@ -20,10 +22,6 @@ GradientDescent = React.createClass
   _highchartLoader: () ->
     # debugger
     chartData = Highcharts.chart $(ReactDOM.findDOMNode(@)).find('#chart-container')[0],
-        xAxis:
-          min: 135
-          # max: 5.5
-        # yAxis: min: 0
         title: text: 'Scatter plot with regression line'
         series: [
           {
@@ -36,9 +34,9 @@ GradientDescent = React.createClass
             type: 'line'
             name: 'Regression Line'
             data: @state.form.regressions
-            marker: enabled: false
+            # marker: enabled: false
             states: hover: lineWidth: 0
-            enableMouseTracking: false
+            # enableMouseTracking: false
           }
         ]
 
@@ -66,8 +64,7 @@ GradientDescent = React.createClass
     console.log(@state.form[id])
 
   _calculateHipotesa: (x) ->
-    # console.log('teat0 ||'+@state.form.teta0+" teta1||"+@state.form.teta1+" ||"+x)
-    ret = (parseFloat(@state.form.teta0) + parseFloat(@state.form.teta1)) * parseFloat(x)
+    ret = parseFloat(@state.form.teta0) + parseFloat(@state.form.teta1) * parseFloat(x)
     ret
 
   onProcess: () ->
@@ -78,79 +75,53 @@ GradientDescent = React.createClass
     tempTeta1 = 0
     numberIteration = 0
     targetIteration = parseFloat(iteration)
-    console.log('start iterartion'+numberIteration)
+    # console.log('start iterartion'+numberIteration)
     myLoop = () =>
       setTimeout (() =>
-        # loop
-        # regression code
-        # debugger
-        # console.log('loop awal total ||'+scatters.length+" ||teta0"+@state.form.teta1+" teta1||"+@state.form.teta0+"|| number iteration"+numberIteration)
-        total = 0
+        total0 = 0
+        total1 = 0
         i=0
         while i < scatters.length
-          x = scatters[i][0]
-          y = scatters[i][1]
-          # if x == 147.2
-            # debugger
-          total += @_calculateHipotesa(x) - y
+          x = parseFloat(scatters[i][0])
+          y = parseFloat(scatters[i][1])
+          total0 += @_calculateHipotesa(x) - y
+          total1 += (@_calculateHipotesa(x) - y) * x
           i++
-        # total = (total / scatters.length)
-        tempTeta0 = parseFloat(@state.form.teta0) - parseFloat(alpha) * total / scatters.length
-        # console.log('disini '+@state.form.teta0)
 
-        # debugger
-        total = 0
-        i=0
-        while i < scatters.length
-          x = scatters[i][0]
-          y = scatters[i][1]
-          # if x == 147.2
-            # debugger
-          total = total + ((@_calculateHipotesa(x) - y) * x)
-          i++
-        # total = (total / scatters.length)
-        tempTeta1 = parseFloat(@state.form.teta1) - parseFloat(alpha) * total / scatters.length
-        # console.log('neng kene'+ @state.form.teta1)
+        total0 = total0 / scatters.length
+        total1 = total1 / scatters.length
+        tempTeta0 = parseFloat(@state.form.teta0) - parseFloat(alpha) * total0
+        tempTeta1 = parseFloat(@state.form.teta1) - parseFloat(alpha) * total1
 
-        # debugger
-
-        # finalTeta0 = tempTeta0
-        # finalTeta1 = tempTeta1
-        # console.log('neng kene belum berubah semua'+ @state.form.teta1+" "+@state.form.teta0)
         @onChangeForm('teta0', tempTeta0)
         @onChangeForm('teta1', tempTeta1)
-        # console.log('semua udah berubah'+ @state.form.teta1+" "+@state.form.teta0)
 
-        arrayX = @state.scatters.map (e) ->
-            e[0]
-        minOfy = Math.min.apply(Math, arrayX)
-        maxOfy = Math.max.apply(Math, arrayX)
-        regressions = [
-          [minOfy, tempTeta0]
-          [maxOfy, tempTeta1]
-        ]
+
+        i = 0
+        regressions = []
+        # more looping for drawing graph
+        while i < scatters.length
+          x = parseFloat(scatters[i][0])
+          y = parseFloat(scatters[i][1])
+          regression = @_calculateHipotesa(x)
+          regressions.push [x, regression]
+          i++
+
 
         @onChangeForm('regressions', regressions)
 
-        # console.log(regressions[0][0]+","+regressions[0][1]+"|||"+regressions[1][0]+","+regressions[1][1])
         @state.chartData.series[1].update(
           data: regressions
         )
-        # if numberIteration >= targetIteration
-          # break
 
         console.log numberIteration
+
         numberIteration++
         if(numberIteration <= targetIteration)
-          # debugger
           myLoop()
-
-        # debugger
       ), 300
 
     myLoop()
-
-    console.log(@state.form.regressions)
 
 
   render: ()->
