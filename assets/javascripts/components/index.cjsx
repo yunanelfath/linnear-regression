@@ -69,13 +69,12 @@ GradientDescent = React.createClass
 
   onProcess: () ->
     { form, scatters } = @state
-    { iteration, alpha, teta0, teta1, finalTeta0, finalTeta1 } = form
+    { iteration, alpha, teta0, teta1 } = form
 
+    @onChangeForm('numberIteration', 0) # reset number iteration
     tempTeta0 = 0
     tempTeta1 = 0
-    numberIteration = 0
     targetIteration = parseFloat(iteration)
-    # console.log('start iterartion'+numberIteration)
     myLoop = () =>
       setTimeout (() =>
         total0 = 0
@@ -114,10 +113,11 @@ GradientDescent = React.createClass
           data: regressions
         )
 
-        console.log numberIteration
+        console.log @state.form.numberIteration
 
-        numberIteration++
-        if(numberIteration <= targetIteration)
+        @state.form.numberIteration++
+        @onChangeForm('numberIteration', @state.form.numberIteration)
+        if(@state.form.numberIteration < targetIteration)
           myLoop()
       ), 300
 
@@ -136,7 +136,7 @@ GradientDescent = React.createClass
         </FormGroup>
         <FormGroup>
           iteration
-          <FormControl type="text" onChange={onChangeForm.bind(null, 'iteration')} placeholder="iteration"/>
+          <FormControl value={form?.iteration} type="text" onChange={onChangeForm.bind(null, 'iteration')} placeholder="iteration"/>
         </FormGroup>
         <FormGroup>
           teta0
@@ -146,6 +146,7 @@ GradientDescent = React.createClass
           teta1
           <FormControl value={form?.teta1} type="text" onChange={onChangeForm.bind(@, 'teta1')} placeholder="teta1"/>
         </FormGroup>
+        <FormGroup>Iteration Number: {form?.numberIteration}</FormGroup>
         <Button onClick={onProcess}>Process</Button>
       </FormGroup>
       <div id="chart-container"></div>

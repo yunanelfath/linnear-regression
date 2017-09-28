@@ -14,6 +14,8 @@ window.GlobalStore = _.assign(new EventEmitter(), {
     tempTeta1: 0.00
     finalTeta0: 0.00
     finalTeta1: 0.00
+    iteration: 100
+    numberIteration: 0
     regressions: [
       [0,0]
       [0,0]
