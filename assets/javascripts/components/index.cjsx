@@ -23,6 +23,13 @@ GradientDescent = React.createClass
     # debugger
     chartData = Highcharts.chart $(ReactDOM.findDOMNode(@)).find('#chart-container')[0],
         title: text: 'Scatter plot with regression line'
+        legend:
+          # layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+          floating: true,
+          # backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+          borderWidth: 1
         series: [
           {
             type: 'scatter'
@@ -35,6 +42,7 @@ GradientDescent = React.createClass
             name: 'Regression Line'
             data: @state.form.regressions
             # marker: enabled: false
+            scatter: lineWidth: 2
             states: hover: lineWidth: 0
             # enableMouseTracking: false
           }
@@ -103,6 +111,12 @@ GradientDescent = React.createClass
           x = parseFloat(scatters[i][0])
           y = parseFloat(scatters[i][1])
           regression = @_calculateHipotesa(x)
+          # console.log 'ini adalah '+regression+','+y+','+x
+          if(typeof scatters[i+1] != 'undefined')
+            for k in _.range(x+1, scatters[i+1][0])
+              regression2 = @_calculateHipotesa(k)
+              regressions.push [k, regression2]
+              k++
           regressions.push [x, regression]
           i++
 
@@ -119,7 +133,7 @@ GradientDescent = React.createClass
         @onChangeForm('numberIteration', @state.form.numberIteration)
         if(@state.form.numberIteration < targetIteration)
           myLoop()
-      ), 300
+      ), 100
 
     myLoop()
 
